@@ -2,7 +2,7 @@
 
 # Trabalho da disciplina Redes de Computadores - UFC Campus Quixadá
 # Descrição: Aplicação cliente Servidor, tal que o servidor é em C/C++ e 
-# o Cliente em Python, utiliza socket TCP e permiti o usuário jogar o 
+# o Cliente em Python, utiliza socket TCP e permite ao usuário jogar o 
 # jogo da Forca com comunicação em rede.
 # 
 # Curso Ciência da Computação
