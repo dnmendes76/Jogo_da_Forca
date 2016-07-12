@@ -1,0 +1,7 @@
+leopardo animal
+lobo animal
+ovelha animal
+
+pizza comida
+arroz comida
+carne comida

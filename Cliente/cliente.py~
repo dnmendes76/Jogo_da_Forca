@@ -1,0 +1,70 @@
+#-*- coding: utf-8-*-
+
+# Trabalho da disciplina Redes de Computadores - UFC Campus Quixadá
+# Descrição: Aplicação cliente Servidor, tal que o servidor é em C/C++ e 
+# o Cliente em Python, utiliza socket TCP e permiti o usuário jogar o 
+# jogo da Forca com comunicação em rede.
+# 
+# Curso Ciência da Computação
+# Daiane Mendes - dnmendes76@gmail.com 
+
+import socket
+from GUI import *
+
+alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+	        'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+
+ip = '127.0.0.1'
+port = 7000
+
+try:
+	# incializa o socket do tipo TCP
+	tcpSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	# realiza a conexão com o servidor no ip ='127.0.0.1' e na porta port = 7000
+	tcpSocket.connect((ip, port))
+except Exception:
+	print "\n O servidor esta executando? \n"
+	exit(1)
+try:
+	while True:
+		op = getOp()
+		if op == '1' or op == '2':
+			if op == '2':
+				break
+			else:
+				# envia a opção do usuário para o servidor
+				tcpSocket.send(op);
+				# recebe os primeiros dados do jogo
+				dados = tcpSocket.recv(40)
+				temp = dados.split(';')
+				showPlacar(temp[0], temp[1])
+				showQuis(temp[3], temp[4], temp[2])
+				# dado que o usuário tem todas as informações necessárias começa a pedir os chutes
+				while True:
+					# recebe um caracter do usuário
+					k = getChute()
+					# se for um caracter válido
+					if k in alphabet:
+						# envia o chute ao usuário
+						tcpSocket.send(k)
+						# Recebe os dados de mais uma interação do servidor.
+						result = tcpSocket.recv(1024)
+						temp = result.split(';')
+						showPlacar(temp[0], temp[1])
+						showQuis(temp[3], temp[4], temp[2])
+						if temp[5] == ':)':
+							showWin(True)
+							break
+						elif temp[5] == ':(':
+							showWin(False)
+							print "A Palavra era : "+ temp[6]
+							break
+					else:
+						getMsgErroChute()
+		else:
+			getMsgErroMenu()
+
+	# fecha a conexao
+	tcpSocket.close()
+except KeyboardInterrupt:
+	print "\n Cancelado pelo usuário."
